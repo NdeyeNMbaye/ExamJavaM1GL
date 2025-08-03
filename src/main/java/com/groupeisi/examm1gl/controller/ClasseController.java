@@ -55,40 +55,25 @@ public class ClasseController {
     }
 
     /**
-     * Gère la soumission du formulaire d'ajout ou de modification d'une classe.
-     *
-     * IMPORTANT : L'annotation a été changée de "/save" à "/ajout" pour
-     * correspondre à l'action du formulaire qui envoie une requête POST à
-     * /classes/ajout.
-     *
+     * Gère la soumission du formulaire d'ajout d'une nouvelle classe.
      * @param classeDto L'objet ClasseDto à enregistrer.
      * @param result Les résultats de la validation.
      * @param model Le modèle pour repasser des données en cas d'erreur.
      * @param redirectAttributes Attributs pour passer des messages de redirection.
      * @return Une redirection vers la liste des classes.
      */
-    @PostMapping("/ajout") // CORRECTION : L'annotation POST doit correspondre à l'URL du formulaire
+    @PostMapping("/ajout")
     public String saveClasse(@Valid @ModelAttribute("classe") ClasseDto classeDto, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            // CORRECTION : Si la validation échoue, il faut repasser la liste des secteurs
-            // pour éviter une erreur NullPointerException lors du rendu du formulaire
-            // avec la balise <select>.
             List<SectorDto> sectors = sectorService.getAll();
             model.addAttribute("sectors", sectors);
-
-            // On retourne à la vue d'ajout/modification avec les erreurs
-            return classeDto.getId() != null ? "classe/modifie" : "classe/ajout";
+            return "classe/ajout";
         }
         try {
-            if (classeDto.getId() != null) {
-                classeService.update(classeDto);
-                redirectAttributes.addFlashAttribute("message", "Classe modifiée avec succès !");
-            } else {
-                classeService.save(classeDto);
-                redirectAttributes.addFlashAttribute("message", "Classe ajoutée avec succès !");
-            }
+            classeService.save(classeDto);
+            redirectAttributes.addFlashAttribute("message", "Classe ajoutée avec succès !");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Une erreur est survenue lors de l'enregistrement.");
+            redirectAttributes.addFlashAttribute("error", "Une erreur est survenue lors de l'ajout.");
         }
         return "redirect:/classes/liste";
     }
@@ -112,6 +97,30 @@ public class ClasseController {
             redirectAttributes.addFlashAttribute("error", "Classe non trouvée.");
             return "redirect:/classes/liste";
         }
+    }
+
+    /**
+     * Gère la soumission du formulaire de modification d'une classe existante.
+     * @param classeDto L'objet ClasseDto à mettre à jour.
+     * @param result Les résultats de la validation.
+     * @param model Le modèle pour repasser des données en cas d'erreur.
+     * @param redirectAttributes Attributs pour passer des messages de redirection.
+     * @return Une redirection vers la liste des classes.
+     */
+    @PostMapping("/modifie")
+    public String updateClasse(@Valid @ModelAttribute("classe") ClasseDto classeDto, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            List<SectorDto> sectors = sectorService.getAll();
+            model.addAttribute("sectors", sectors);
+            return "classe/modifie";
+        }
+        try {
+            classeService.update(classeDto);
+            redirectAttributes.addFlashAttribute("message", "Classe modifiée avec succès !");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Une erreur est survenue lors de la modification.");
+        }
+        return "redirect:/classes/liste";
     }
 
     /**

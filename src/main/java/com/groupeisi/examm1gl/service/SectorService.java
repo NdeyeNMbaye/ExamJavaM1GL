@@ -31,7 +31,7 @@ public class SectorService implements IUSectorSrvice {
 
     @Override
     @Transactional(readOnly = true)
-    public SectorDto get(Integer id) {
+    public SectorDto get(int id) {
         return sectorDao.findById(id)
                 .map(sectorMapper::toSectorDto)
                 .orElseThrow(() -> new EntityNotFoundException(
@@ -39,29 +39,44 @@ public class SectorService implements IUSectorSrvice {
                 ));
     }
 
+    /**
+     * Récupère un secteur par son nom.
+     * @param nom Le nom du secteur.
+     * @return L'objet SectorDto correspondant.
+     */
     @Override
-    @Transactional
-    public SectorDto save(SectorDto sectorDto) {
-        SectorEntity sector = sectorMapper.toSectorEntity(sectorDto);
-        return sectorMapper.toSectorDto(sectorDao.save(sector));
+    @Transactional(readOnly = true)
+    public SectorDto getSectorByName(String nom) {
+        return sectorDao.findByName(nom)
+                .map(sectorMapper::toSectorDto)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        messageSource.getMessage("sector.notfound.byName", new Object[]{nom}, Locale.getDefault())
+                ));
     }
 
     @Override
     @Transactional
-    public SectorDto update(SectorDto sectorDto) {
-        SectorEntity existingSector = sectorDao.findById(sectorDto.getId())
+    public SectorDto add(SectorDto sector) {
+        SectorEntity sectorEntity = sectorMapper.toSectorEntity(sector);
+        return sectorMapper.toSectorDto(sectorDao.save(sectorEntity));
+    }
+
+    @Override
+    @Transactional
+    public SectorDto update(SectorDto sector) {
+        SectorEntity existingSector = sectorDao.findById(sector.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        messageSource.getMessage("sector.notfound", new Object[]{sectorDto.getId()}, Locale.getDefault())
+                        messageSource.getMessage("sector.notfound", new Object[]{sector.getId()}, Locale.getDefault())
                 ));
 
-        existingSector.setName(sectorDto.getName());
+        existingSector.setName(sector.getName());
 
         return sectorMapper.toSectorDto(sectorDao.save(existingSector));
     }
 
     @Override
     @Transactional
-    public void delete(Integer id) {
+    public void delete(int id) {
         if (!sectorDao.existsById(id)) {
             throw new EntityNotFoundException(
                     messageSource.getMessage("sector.notfound", new Object[]{id}, Locale.getDefault())

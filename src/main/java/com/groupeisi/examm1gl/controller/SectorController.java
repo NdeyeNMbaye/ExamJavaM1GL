@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/sectors") // Ajout de l'annotation de base pour les URLs
+@RequestMapping("/sectors")
 public class SectorController {
 
     private final IUSectorSrvice sectorService;
@@ -29,7 +29,7 @@ public class SectorController {
     /**
      * Gère la requête GET pour afficher la page de la liste des secteurs.
      */
-    @GetMapping("/liste") // Changement de l'URL pour correspondre à votre structure de fichiers
+    @GetMapping("/liste")
     public String viewSectorsPage(Model model) {
         model.addAttribute("sectors", sectorService.getAll());
         return "sector/liste";
@@ -50,7 +50,7 @@ public class SectorController {
     @PostMapping("/save")
     public String saveSector(@Valid @ModelAttribute("sector") SectorDto sectorDto, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "sector/ajout"; // ou "sector/modifie"
+            return "sector/ajout";
         }
         try {
             if (sectorDto.getId() != null) {
@@ -59,7 +59,7 @@ public class SectorController {
                 redirectAttributes.addFlashAttribute("message", "Secteur modifié avec succès !");
             } else {
                 // Sinon, c'est une création
-                sectorService.save(sectorDto);
+                sectorService.add(sectorDto); // CORRECTION : Utilisation de la méthode add
                 redirectAttributes.addFlashAttribute("message", "Secteur ajouté avec succès !");
             }
         } catch (Exception e) {
@@ -99,7 +99,6 @@ public class SectorController {
 
     // -- Début des endpoints de l'API REST --
 
-    // Les endpoints de l'API REST que vous avez fournis
     @GetMapping("/api/sectors")
     @ResponseBody
     public ResponseEntity<List<SectorDto>> getAllSectors() {
@@ -122,7 +121,7 @@ public class SectorController {
     @ResponseBody
     public ResponseEntity<SectorDto> saveSectorApi(@RequestBody SectorDto sectorDto) {
         try {
-            SectorDto savedSector = sectorService.save(sectorDto);
+            SectorDto savedSector = sectorService.add(sectorDto); // CORRECTION : Utilisation de la méthode add
             return new ResponseEntity<>(savedSector, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

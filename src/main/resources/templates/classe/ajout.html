@@ -43,8 +43,9 @@
 
         <!-- Champ pour le secteur -->
         <div class="mb-3">
-            <label for="sector" class="form-label">Secteur</label>
-            <select id="sector" th:field="*{sector}" class="form-control" required>
+            <label for="idSector" class="form-label">Secteur</label>
+            <!-- LIGNE CORRIGÉE : Le champ th:field doit correspondre au DTO -->
+            <select id="idSector" th:field="*{idSector}" class="form-control" required>
                 <option value="">-- Sélectionnez un secteur --</option>
                 <!-- Boucle sur la liste de secteurs pour créer les options -->
                 <!-- th:value="${sector.id}" envoie l'ID du secteur -->
@@ -52,7 +53,7 @@
                 <option th:each="sector : ${sectors}" th:value="${sector.id}" th:text="${sector.name}">Secteur</option>
             </select>
             <!-- Affichage des erreurs de validation -->
-            <div class="alert alert-danger" th:if="${#fields.hasErrors('sector')}" th:errors="*{sector}"></div>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('idSector')}" th:errors="*{idSector}"></div>
         </div>
 
         <!-- Boutons d'action -->

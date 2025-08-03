@@ -1,10 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Modifier une Classe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- Remplacez par le bon chemin si nécessaire -->
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
+<nav class="navbar navbar-expand-lg navbar-dark navbar-isi">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img src="https://placehold.co/40x40/004c9e/ffffff?text=ISI" alt="Logo ISI" width="40" height="40" class="d-inline-block align-text-top me-2">
+            Projet des classes
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="mt-4 mb-4">Modifier une classe</h2>
+
+    <!-- Formulaire de modification de classe -->
+    <!-- th:object="${classe}" lie le formulaire à l'objet 'classe' du modèle -->
+    <!-- th:action définit l'URL de soumission du formulaire -->
+    <form th:action="@{/classes/modifie}" th:object="${classe}" method="post">
+
+        <!-- Champ caché pour l'ID de la classe -->
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Champ pour le nom de la classe -->
+        <div class="mb-3">
+            <label for="className" class="form-label">Nom de la classe</label>
+            <input type="text" class="form-control" id="className" th:field="*{className}" required>
+            <!-- Affichage des erreurs de validation -->
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('className')}" th:errors="*{className}"></div>
+        </div>
+
+        <!-- Champ pour la description de la classe -->
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" th:field="*{description}" rows="3"></textarea>
+        </div>
+
+        <!-- Champ pour le secteur -->
+        <div class="mb-3">
+            <label for="idSector" class="form-label">Secteur</label>
+            <!-- Le champ th:field doit correspondre au DTO -->
+            <select id="idSector" th:field="*{idSector}" class="form-control" required>
+                <option value="">-- Sélectionnez un secteur --</option>
+                <!-- Boucle sur la liste de secteurs pour créer les options -->
+                <!-- th:value="${sector.id}" envoie l'ID du secteur -->
+                <!-- th:text="${sector.name}" affiche le nom du secteur -->
+                <option th:each="sector : ${sectors}" th:value="${sector.id}" th:text="${sector.name}">Secteur</option>
+            </select>
+            <!-- Affichage des erreurs de validation -->
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('idSector')}" th:errors="*{idSector}"></div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary me-2">Enregistrer les modifications</button>
+            <a th:href="@{/classes}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>

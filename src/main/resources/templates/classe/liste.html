@@ -45,9 +45,8 @@
             <td th:text="${classe.id}">1</td>
             <td th:text="${classe.className}">Classe 1</td>
             <td th:text="${classe.description}">Description de la classe</td>
-            <!-- LIGNE CORRIGÉE : Utilisation de l'opérateur de navigation sécurisée '?' -->
-            <!-- Cela évite une erreur si 'classe.sector' est null -->
-            <td th:text="${classe.sector?.name}">Secteur A</td>
+            <!-- LIGNE CORRIGÉE : Utilisation du champ 'sectorName' du DTO -->
+            <td th:text="${classe.sectorName}">Secteur A</td>
             <td>
                 <a th:href="@{/classes/modifie/{id}(id=${classe.id})}" class="btn btn-sm btn-warning">Modifier</a>
                 <a th:href="@{/classes/supprime/{id}(id=${classe.id})}" class="btn btn-sm btn-danger"
