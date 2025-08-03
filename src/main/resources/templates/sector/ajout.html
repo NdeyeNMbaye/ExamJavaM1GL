@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Secteur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Utilisation de Bootstrap 5 pour le style -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- Lien vers un fichier CSS personnalisé (si nécessaire) -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Style personnalisé pour la barre de navigation -->
+    <style>
+        .navbar-isi {
+            background-color: #004c9e; /* Couleur bleu foncé pour la nav bar */
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-isi">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img src="https://placehold.co/40x40/004c9e/ffffff?text=ISI" alt="Logo ISI" width="40" height="40" class="d-inline-block align-text-top me-2">
+            Projet des classes
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="mt-4 mb-4">Ajouter un secteur</h2>
+
+    <!-- Formulaire d'ajout d'un secteur -->
+    <!-- L'action du formulaire pointe vers le même endpoint de sauvegarde -->
+    <form th:action="@{/sectors/save}" th:object="${sector}" method="post">
+
+        <!-- Champ pour le nom du secteur -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Nom du secteur</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            <!-- Affichage des erreurs de validation, si existantes -->
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="mt-4">
+            <!-- Le bouton d'ajout est en bleu (btn-primary) -->
+            <button type="submit" class="btn btn-primary me-2">Ajouter</button>
+            <!-- Le bouton d'annulation renvoie à la liste des secteurs -->
+            <a th:href="@{/sectors/liste}" class="btn btn-secondary">Annuler</a>
+        </div>
+    </form>
+</div>
+
+<!-- Scripts JavaScript de Bootstrap 5 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

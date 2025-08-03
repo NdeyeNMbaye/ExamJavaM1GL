@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Application des Classes et Secteurs - ISI</title>
+    <!-- Méta tag pour un affichage adaptatif sur tous les appareils -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Style personnalisé -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-isi">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img src="https://placehold.co/40x40/004c9e/ffffff?text=ISI" alt="Logo ISI" width="40" height="40" class="d-inline-block align-text-top me-2">
+            Projet des classes
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="jumbotron text-center">
+        <h1 class="display-4">Bienvenue dans l'Application ISI</h1>
+        <p class="lead">Gérez les classes et les secteurs facilement.</p>
+        <hr class="my-4">
+        <p>Utilisez les liens ci-dessous pour naviguer.</p>
+        <a th:href="@{/classe/liste}" class="btn btn-primary btn-lg me-2">Gérer les classes</a>
+        <a th:href="@{/sectors/liste}" class="btn btn-secondary btn-lg">Gérer les secteurs</a>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>

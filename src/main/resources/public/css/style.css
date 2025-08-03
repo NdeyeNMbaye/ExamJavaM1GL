@@ -1,0 +1,20 @@
+/* Fichier: style.css */
+
+body {
+    background-color: #f8f9fa;
+}
+.navbar-isi {
+    background-color: #004c9e;
+}
+.navbar-isi .nav-link,
+.navbar-isi .navbar-brand {
+    color: #ffffff !important;
+}
+.jumbotron {
+    background-color: #e9ecef;
+    padding: 4rem 2rem;
+    border-radius: 0.3rem;
+}
+.navbar-isi {
+    background-color: #004c9e; /* Couleur bleu foncé pour la nav bar */
+}

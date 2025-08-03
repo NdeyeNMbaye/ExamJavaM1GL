@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier un Secteur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- Lien vers votre fichier CSS personnalisé -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        .navbar-isi {
+            background-color: #004c9e;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-isi">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img src="https://placehold.co/40x40/004c9e/ffffff?text=ISI" alt="Logo ISI" width="40" height="40" class="d-inline-block align-text-top me-2">
+            Projet des classes
+        </a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h2 class="mt-4 mb-4">Modifier le secteur</h2>
+
+    <!-- Le formulaire de modification utilise la même action 'save' que pour l'ajout, le contrôleur se base sur l'ID pour savoir s'il faut mettre à jour ou créer -->
+    <form th:action="@{/sectors/save}" th:object="${sector}" method="post">
+
+        <!-- Champ caché pour l'ID du secteur, nécessaire pour la mise à jour -->
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Champ pour le nom du secteur -->
+        <div class="mb-3">
+            <label for="name" class="form-label">Nom du secteur</label>
+            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+            <!-- Affichage des erreurs de validation, si existantes -->
+            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+        </div>
+
+        <!-- Boutons d'action -->
+        <!-- Changement de btn-success à btn-primary pour un thème bleu -->
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        <a th:href="@{/sectors/liste}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+
+<!-- Scripts JavaScript de Bootstrap 5 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
