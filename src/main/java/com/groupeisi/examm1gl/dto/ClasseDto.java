@@ -20,4 +20,5 @@ public class ClasseDto implements Serializable {
     // Informations du secteur pour éviter le lazy loading et les DTO imbriqués
     private Integer idSector;
     private String sectorName;
+    private SectorDto sector;
 }
