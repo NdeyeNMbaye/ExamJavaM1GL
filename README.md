@@ -26,7 +26,6 @@ Pour compiler et exécuter ce projet, vous avez besoin des outils suivants :
 Environnement: 
 JDK 17
 Maven 3.9.*
-Serveur d'application: Tomcat 10
 Base de données: PostgreSQL
 
 L'application est un projet Maven, donc toutes les dépendances sont gérées automatiquement.
@@ -86,8 +85,10 @@ Formulaire d'ajout
 Formulaire de modification
 <img width="1878" height="814" alt="image" src="https://github.com/user-attachments/assets/5ff4a181-ac71-4583-8fec-d2adc116045f" />
 
+-Test unitaire (a faire)
 
 Supression d'une classe
 <img width="1861" height="929" alt="image" src="https://github.com/user-attachments/assets/98e28095-5402-4051-a145-33a92c55fe9e" />
+
 
 
