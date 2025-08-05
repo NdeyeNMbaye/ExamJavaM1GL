@@ -13,15 +13,32 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Implémentation du service pour la gestion des secteurs.
+ * Cette classe gère la logique métier des opérations CRUD pour les secteurs.
+ */
 @Service
 @AllArgsConstructor
 @Setter
 public class SectorService implements IUSectorSrvice {
 
+    /**
+     * DAO pour l'accès aux données des secteurs.
+     */
     private ISectorDao sectorDao;
+    /**
+     * Mapper pour la conversion entre les entités et les DTO de secteur.
+     */
     private SectorMapper sectorMapper;
+    /**
+     * Source de messages pour la gestion des messages d'erreur internationalisés.
+     */
     private MessageSource messageSource;
 
+    /**
+     * Récupère la liste de tous les secteurs.
+     * @return Une liste d'objets {@link SectorDto}.
+     */
     @Override
     @Transactional(readOnly = true)
     public List<SectorDto> getAll() {
@@ -29,6 +46,12 @@ public class SectorService implements IUSectorSrvice {
         return sectorMapper.listSectorEntityToListSectorDto(sectors);
     }
 
+    /**
+     * Récupère un secteur par son identifiant.
+     * @param id L'identifiant du secteur à récupérer.
+     * @return L'objet {@link SectorDto} correspondant.
+     * @throws EntityNotFoundException si aucun secteur n'est trouvé pour l'identifiant donné.
+     */
     @Override
     @Transactional(readOnly = true)
     public SectorDto get(int id) {
@@ -41,8 +64,9 @@ public class SectorService implements IUSectorSrvice {
 
     /**
      * Récupère un secteur par son nom.
-     * @param nom Le nom du secteur.
-     * @return L'objet SectorDto correspondant.
+     * @param nom Le nom du secteur à rechercher.
+     * @return L'objet {@link SectorDto} correspondant.
+     * @throws EntityNotFoundException si aucun secteur n'est trouvé avec ce nom.
      */
     @Override
     @Transactional(readOnly = true)
@@ -54,6 +78,11 @@ public class SectorService implements IUSectorSrvice {
                 ));
     }
 
+    /**
+     * Ajoute un nouveau secteur.
+     * @param sector L'objet {@link SectorDto} contenant les données du nouveau secteur.
+     * @return L'objet {@link SectorDto} du secteur nouvellement créé.
+     */
     @Override
     @Transactional
     public SectorDto add(SectorDto sector) {
@@ -61,9 +90,16 @@ public class SectorService implements IUSectorSrvice {
         return sectorMapper.toSectorDto(sectorDao.save(sectorEntity));
     }
 
+    /**
+     * Met à jour un secteur existant.
+     * @param sector L'objet {@link SectorDto} avec les données mises à jour.
+     * @return L'objet {@link SectorDto} du secteur modifié.
+     * @throws EntityNotFoundException si le secteur n'est pas trouvé.
+     */
     @Override
     @Transactional
     public SectorDto update(SectorDto sector) {
+        // Vérifie si le secteur existe avant de le mettre à jour.
         SectorEntity existingSector = sectorDao.findById(sector.getId())
                 .orElseThrow(() -> new EntityNotFoundException(
                         messageSource.getMessage("sector.notfound", new Object[]{sector.getId()}, Locale.getDefault())
@@ -74,6 +110,11 @@ public class SectorService implements IUSectorSrvice {
         return sectorMapper.toSectorDto(sectorDao.save(existingSector));
     }
 
+    /**
+     * Supprime un secteur par son identifiant.
+     * @param id L'identifiant du secteur à supprimer.
+     * @throws EntityNotFoundException si le secteur n'est pas trouvé.
+     */
     @Override
     @Transactional
     public void delete(int id) {

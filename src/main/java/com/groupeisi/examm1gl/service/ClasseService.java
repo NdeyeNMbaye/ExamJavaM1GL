@@ -16,20 +16,36 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Implémentation du service pour la gestion des classes.
+ * Cette classe gère la logique métier et les transactions,
+ * en coordonnant les interactions entre les contrôleurs, les mappers et les DAO.
+ */
 @Service
 @AllArgsConstructor
 @Setter
 public class ClasseService implements IUClasseService {
 
-    // Injection des dépendances
+    /**
+     * DAO pour l'accès aux données des classes.
+     */
     private IClasseDao classeDao;
+    /**
+     * DAO pour l'accès aux données des secteurs.
+     */
     private ISectorDao sectorDao;
+    /**
+     * Mapper pour la conversion entre les entités et les DTO de classe.
+     */
     private ClasseMapper classeMapper;
+    /**
+     * Source de messages pour la gestion des messages d'erreur internationalisés.
+     */
     private MessageSource messageSource;
 
     /**
      * Récupère la liste de toutes les classes.
-     * @return une liste de ClasseDto.
+     * @return Une liste de {@link ClasseDto}.
      */
     @Override
     @Transactional(readOnly = true)
@@ -40,9 +56,9 @@ public class ClasseService implements IUClasseService {
 
     /**
      * Récupère une classe par son identifiant.
-     * @param id l'identifiant de la classe.
-     * @return un objet ClasseDto.
-     * @throws EntityNotFoundException si la classe n'est pas trouvée.
+     * @param id L'identifiant de la classe à récupérer.
+     * @return L'objet {@link ClasseDto} correspondant.
+     * @throws EntityNotFoundException si aucune classe n'est trouvée pour l'identifiant donné.
      */
     @Override
     @Transactional(readOnly = true)
@@ -56,30 +72,35 @@ public class ClasseService implements IUClasseService {
 
     /**
      * Enregistre une nouvelle classe.
-     * Gère la relation avec le secteur associé.
-     * @param classeDto l'objet ClasseDto à enregistrer.
-     * @return l'objet ClasseDto après l'enregistrement.
-     * @throws EntityNotFoundException si le secteur n'est pas trouvé.
+     * La méthode vérifie d'abord l'existence du secteur associé avant de
+     * sauvegarder la classe.
+     *
+     * @param classeDto L'objet {@link ClasseDto} à enregistrer.
+     * @return L'objet {@link ClasseDto} après l'enregistrement.
+     * @throws EntityNotFoundException si le secteur spécifié n'existe pas.
      */
     @Override
     @Transactional
     public ClasseDto save(ClasseDto classeDto) {
-        // Recherche du secteur associé
+        // Recherche du secteur associé pour s'assurer de son existence
         SectorEntity sector = sectorDao.findById(classeDto.getIdSector())
                 .orElseThrow(() -> new EntityNotFoundException(
                         messageSource.getMessage("sector.notfound", new Object[]{classeDto.getIdSector()}, Locale.getDefault())
                 ));
 
         ClasseEntity classe = classeMapper.toClasseEntity(classeDto);
-        classe.setSector(sector); // Définir l'entité complète SectorEntity
+        classe.setSector(sector);
 
         return classeMapper.toClasseDto(classeDao.save(classe));
     }
 
     /**
      * Met à jour une classe existante.
-     * @param classeDto l'objet ClasseDto avec les données mises à jour.
-     * @return l'objet ClasseDto après la mise à jour.
+     * La méthode vérifie l'existence de la classe et du secteur associé avant de
+     * procéder à la mise à jour des données.
+     *
+     * @param classeDto L'objet {@link ClasseDto} contenant les données mises à jour.
+     * @return L'objet {@link ClasseDto} après la mise à jour.
      * @throws EntityNotFoundException si la classe ou le secteur n'est pas trouvé.
      */
     @Override
@@ -91,13 +112,13 @@ public class ClasseService implements IUClasseService {
                         messageSource.getMessage("classe.notfound", new Object[]{classeDto.getId()}, Locale.getDefault())
                 ));
 
-        // Recherche du secteur associé
+        // Recherche du secteur associé pour s'assurer de son existence
         SectorEntity sector = sectorDao.findById(classeDto.getIdSector())
                 .orElseThrow(() -> new EntityNotFoundException(
                         messageSource.getMessage("sector.notfound", new Object[]{classeDto.getIdSector()}, Locale.getDefault())
                 ));
 
-        // Mettre à jour les propriétés de l'entité existante
+        // Mise à jour des propriétés de l'entité existante
         existingClasse.setClassName(classeDto.getClassName());
         existingClasse.setDescription(classeDto.getDescription());
         existingClasse.setSector(sector);
@@ -107,7 +128,8 @@ public class ClasseService implements IUClasseService {
 
     /**
      * Supprime une classe par son identifiant.
-     * @param id l'identifiant de la classe à supprimer.
+     * @param id L'identifiant de la classe à supprimer.
+     * @throws EntityNotFoundException si aucune classe n'est trouvée pour l'identifiant donné.
      */
     @Override
     @Transactional

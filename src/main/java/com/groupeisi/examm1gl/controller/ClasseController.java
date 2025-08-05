@@ -17,6 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Ce contrôleur gère les requêtes liées à la gestion des classes.
+ * Il offre des endpoints pour les vues (Thymeleaf) et une API REST pour les classes.
+ */
 @Controller
 @RequestMapping("/classes")
 public class ClasseController {
@@ -24,6 +28,11 @@ public class ClasseController {
     private final IUClasseService classeService;
     private final IUSectorSrvice sectorService;
 
+    /**
+     * Constructeur pour l'injection des dépendances des services Classe et Sector.
+     * @param classeService Le service pour gérer la logique métier des classes.
+     * @param sectorService Le service pour gérer la logique métier des secteurs.
+     */
     @Autowired
     public ClasseController(IUClasseService classeService, IUSectorSrvice sectorService) {
         this.classeService = classeService;
@@ -31,9 +40,9 @@ public class ClasseController {
     }
 
     /**
-     * Gère la requête GET pour afficher la page de la liste des classes.
-     * @param model Le modèle pour passer les données à la vue.
-     * @return Le nom de la vue à afficher (e.g., "classe/liste").
+     * Affiche la page de la liste de toutes les classes.
+     * @param model Le modèle pour passer la liste des classes à la vue.
+     * @return Le nom de la vue "classe/liste".
      */
     @GetMapping("/liste")
     public String viewClassesPage(Model model) {
@@ -42,9 +51,9 @@ public class ClasseController {
     }
 
     /**
-     * Gère la requête GET pour afficher le formulaire d'ajout d'une classe.
-     * @param model Le modèle pour ajouter un objet ClasseDto vide.
-     * @return Le nom de la vue du formulaire d'ajout.
+     * Affiche le formulaire pour ajouter une nouvelle classe.
+     * @param model Le modèle pour ajouter un objet ClasseDto vide et la liste des secteurs à la vue.
+     * @return Le nom de la vue "classe/ajout".
      */
     @GetMapping("/ajout")
     public String showAddForm(Model model) {
@@ -55,12 +64,12 @@ public class ClasseController {
     }
 
     /**
-     * Gère la soumission du formulaire d'ajout d'une nouvelle classe.
-     * @param classeDto L'objet ClasseDto à enregistrer.
-     * @param result Les résultats de la validation.
-     * @param model Le modèle pour repasser des données en cas d'erreur.
-     * @param redirectAttributes Attributs pour passer des messages de redirection.
-     * @return Une redirection vers la liste des classes.
+     * Traite la soumission du formulaire d'ajout d'une classe.
+     * @param classeDto L'objet ClasseDto à valider et sauvegarder.
+     * @param result Les résultats de la validation du formulaire.
+     * @param model Le modèle en cas d'erreur de validation.
+     * @param redirectAttributes Attributs pour les messages de succès ou d'erreur après redirection.
+     * @return Une redirection vers la liste des classes en cas de succès ou le formulaire en cas d'erreur.
      */
     @PostMapping("/ajout")
     public String saveClasse(@Valid @ModelAttribute("classe") ClasseDto classeDto, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
@@ -79,11 +88,11 @@ public class ClasseController {
     }
 
     /**
-     * Gère la requête GET pour afficher le formulaire de modification.
+     * Affiche le formulaire de modification pour une classe existante.
      * @param id L'identifiant de la classe à modifier.
-     * @param model Le modèle pour ajouter la classe à la vue.
-     * @param redirectAttributes Attributs pour la redirection en cas d'erreur.
-     * @return Le nom de la vue du formulaire de modification ou une redirection.
+     * @param model Le modèle pour ajouter l'objet ClasseDto et la liste des secteurs.
+     * @param redirectAttributes Attributs pour un message d'erreur si la classe n'est pas trouvée.
+     * @return Le nom de la vue "classe/modifie" ou une redirection vers la liste.
      */
     @GetMapping("/modifie/{id}")
     public String showEditForm(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
@@ -100,11 +109,11 @@ public class ClasseController {
     }
 
     /**
-     * Gère la soumission du formulaire de modification d'une classe existante.
-     * @param classeDto L'objet ClasseDto à mettre à jour.
-     * @param result Les résultats de la validation.
-     * @param model Le modèle pour repasser des données en cas d'erreur.
-     * @param redirectAttributes Attributs pour passer des messages de redirection.
+     * Traite la soumission du formulaire de modification d'une classe.
+     * @param classeDto L'objet ClasseDto avec les données mises à jour.
+     * @param result Les résultats de la validation du formulaire.
+     * @param model Le modèle en cas d'erreur de validation.
+     * @param redirectAttributes Attributs pour les messages de succès ou d'erreur après redirection.
      * @return Une redirection vers la liste des classes.
      */
     @PostMapping("/modifie")
@@ -124,9 +133,9 @@ public class ClasseController {
     }
 
     /**
-     * Gère la requête GET pour supprimer une classe.
+     * Supprime une classe en utilisant son identifiant.
      * @param id L'identifiant de la classe à supprimer.
-     * @param redirectAttributes Attributs pour la redirection en cas de succès ou d'erreur.
+     * @param redirectAttributes Attributs pour les messages de succès ou d'erreur.
      * @return Une redirection vers la liste des classes.
      */
     @GetMapping("/supprime/{id}")
@@ -140,8 +149,12 @@ public class ClasseController {
         return "redirect:/classes/liste";
     }
 
-    // -- Début des endpoints de l'API REST pour interagir avec JavaScript --
+    // --- Début des endpoints de l'API REST ---
 
+    /**
+     * Récupère la liste de toutes les classes via une API REST.
+     * @return Une ResponseEntity contenant la liste des classes.
+     */
     @GetMapping("/api/classes")
     @ResponseBody
     public ResponseEntity<List<ClasseDto>> getAllClasses() {
@@ -149,6 +162,12 @@ public class ClasseController {
         return ResponseEntity.ok(classes);
     }
 
+    /**
+     * Récupère une classe par son identifiant via une API REST.
+     * @param id L'identifiant de la classe.
+     * @return Une ResponseEntity contenant la classe ou un statut 404 si non trouvée.
+     * @throws EntityNotFoundException Si aucune classe n'est trouvée avec l'identifiant donné.
+     */
     @GetMapping("/api/classes/{id}")
     @ResponseBody
     public ResponseEntity<ClasseDto> getClasseById(@PathVariable Integer id) {
@@ -160,6 +179,11 @@ public class ClasseController {
         }
     }
 
+    /**
+     * Sauvegarde une nouvelle classe via une API REST.
+     * @param classeDto L'objet ClasseDto à sauvegarder.
+     * @return Une ResponseEntity contenant la classe sauvegardée avec un statut 201 (CREATED) ou 400 (BAD REQUEST) en cas d'erreur.
+     */
     @PostMapping("/api/classes")
     @ResponseBody
     public ResponseEntity<ClasseDto> saveClasseApi(@RequestBody ClasseDto classeDto) {
@@ -171,6 +195,12 @@ public class ClasseController {
         }
     }
 
+    /**
+     * Met à jour une classe existante via une API REST.
+     * @param id L'identifiant de la classe à mettre à jour.
+     * @param classeDto L'objet ClasseDto avec les données mises à jour.
+     * @return Une ResponseEntity contenant la classe mise à jour ou un statut 404 (NOT FOUND) ou 400 (BAD REQUEST) en cas d'erreur.
+     */
     @PutMapping("/api/classes/{id}")
     @ResponseBody
     public ResponseEntity<ClasseDto> updateClasseApi(@PathVariable Integer id, @RequestBody ClasseDto classeDto) {
@@ -185,6 +215,11 @@ public class ClasseController {
         }
     }
 
+    /**
+     * Supprime une classe par son identifiant via une API REST.
+     * @param id L'identifiant de la classe à supprimer.
+     * @return Une ResponseEntity avec un statut 204 (NO CONTENT) si la suppression réussit ou 404 (NOT FOUND) si la classe n'existe pas.
+     */
     @DeleteMapping("/api/classes/{id}")
     @ResponseBody
     public ResponseEntity<Void> deleteClasseApi(@PathVariable Integer id) {

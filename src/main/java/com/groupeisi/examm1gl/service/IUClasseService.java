@@ -6,44 +6,44 @@ import com.groupeisi.examm1gl.exception.EntityNotFoundException;
 import java.util.List;
 
 /**
- * Interface pour le service de gestion des classes.
- * Elle définit les opérations CRUD (Create, Read, Update, Delete)
- * pour la ressource Classe.
+ * Interface de service pour la gestion des classes.
+ * Elle définit le contrat des opérations CRUD (Create, Read, Update, Delete)
+ * pour l'entité {@link com.groupeisi.examm1gl.entity.ClasseEntity}.
  */
 public interface IUClasseService {
     /**
-     * Récupère la liste de toutes les classes, avec leurs secteurs associés.
-     * @return une liste de ClasseDto.
+     * Récupère toutes les classes disponibles.
+     * @return Une liste d'objets {@link ClasseDto}.
      */
     public List<ClasseDto> getAll();
 
     /**
-     * Récupère une classe par son identifiant.
-     * @param id l'identifiant de la classe.
-     * @return un objet ClasseDto.
-     * @throws EntityNotFoundException si la classe n'est pas trouvée.
+     * Récupère une classe par son identifiant unique.
+     * @param id L'identifiant de la classe à récupérer.
+     * @return L'objet {@link ClasseDto} correspondant à l'identifiant.
+     * @throws EntityNotFoundException si aucune classe n'est trouvée avec cet identifiant.
      */
     public ClasseDto get(Integer id);
 
     /**
      * Enregistre une nouvelle classe.
-     * @param classeDto l'objet ClasseDto à enregistrer.
-     * @return l'objet ClasseDto après l'enregistrement.
+     * @param classeDto L'objet {@link ClasseDto} contenant les données de la nouvelle classe.
+     * @return L'objet {@link ClasseDto} de la classe nouvellement créée.
      * @throws EntityNotFoundException si le secteur associé n'est pas trouvé.
      */
     public ClasseDto save(ClasseDto classeDto);
 
     /**
      * Met à jour une classe existante.
-     * @param classeDto l'objet ClasseDto avec les données mises à jour.
-     * @return l'objet ClasseDto après la mise à jour.
-     * @throws EntityNotFoundException si la classe ou le secteur n'est pas trouvé.
+     * @param classeDto L'objet {@link ClasseDto} contenant les données mises à jour.
+     * @return L'objet {@link ClasseDto} de la classe modifiée.
+     * @throws EntityNotFoundException si la classe ou le secteur associé n'est pas trouvé.
      */
     public ClasseDto update(ClasseDto classeDto);
 
     /**
-     * Supprime une classe par son identifiant.
-     * @param id l'identifiant de la classe à supprimer.
+     * Supprime une classe par son identifiant unique.
+     * @param id L'identifiant de la classe à supprimer.
      * @throws EntityNotFoundException si la classe n'est pas trouvée.
      */
     public void delete(Integer id);
